@@ -19,17 +19,17 @@ public class TablesCreateds {
 
     private String primaryKey;
 
-    private List<String> columns;
+    private String columns;
 
     public String getTableName() {
         return tableName;
     }
 
-    public List<String> getColumns() {
+    public String getColumns() {
         return columns;
     }
 
-    public void setColumns(List<String> columns) {
+    public void setColumns(String columns) {
         this.columns = columns;
     }
 
