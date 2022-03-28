@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UploadService {
+
     public List<String> standardizeColumnNames(List<String> columnNames){
         List<String> newColumnNames = new ArrayList<>();
         for (String columnName : columnNames) {
@@ -26,6 +27,8 @@ public class UploadService {
         columns.add(containsId(columnNames, records));
         for (String columnName : columnNames) {
             if(!columns.get(0).getColumnName().equals(columnName)){
+                //TODO: create a data type identifier
+                // VARCHAR is the default data type
                 Column column = new Column(columnName, "VARCHAR(255)", false, false);
 
                 columns.add(column);
@@ -43,8 +46,8 @@ public class UploadService {
 
             //identifies whether the data type is String or Long
             try {
-                Long.parseLong(records.get(0).get(0));
-                column.setDataType("BIGINT");
+                Integer.parseInt(records.get(0).get(0));
+                column.setDataType("INT");
             } catch (Exception e) {
                 column.setDataType("VARCHAR(255)");
             }
@@ -57,7 +60,7 @@ public class UploadService {
             //Create a default id column
 
             column.setColumnName("id");
-            column.setDataType("BIGINT");
+            column.setDataType("");
             column.setPrimaryKey(true);
             column.setAutoIncrement(true);
             
