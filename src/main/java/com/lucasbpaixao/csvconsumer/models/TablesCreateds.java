@@ -1,9 +1,12 @@
 package com.lucasbpaixao.csvconsumer.models;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 
 @Entity
@@ -17,17 +20,18 @@ public class TablesCreateds {
 
     private String primaryKey;
 
-    private String columns;
+    @OneToMany
+    private List<Column> columns;
 
     public String getTableName() {
         return tableName;
     }
 
-    public String getColumns() {
+    public List<Column> getColumns() {
         return columns;
     }
 
-    public void setColumns(String columns) {
+    public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
 
