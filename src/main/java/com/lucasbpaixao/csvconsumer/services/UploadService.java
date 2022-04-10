@@ -3,7 +3,7 @@ package com.lucasbpaixao.csvconsumer.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lucasbpaixao.csvconsumer.models.Column;
+import com.lucasbpaixao.csvconsumer.models.ColumnsCreateds;
 
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Service;
@@ -21,15 +21,24 @@ public class UploadService {
         return newColumnNames;
     }
 
-    public List<Column> creatColumns(List<String> columnNames, List<CSVRecord> records){
-        List<Column> columns = new ArrayList<>();
+    public List<ColumnsCreateds> createColumns(List<String> columnNames, List<CSVRecord> records, String primaryKey){
+        List<ColumnsCreateds> columns = new ArrayList<>();
 
-        columns.add(containsId(columnNames, records));
+        ColumnsCreateds primaryKeyColumn = new ColumnsCreateds();
+
+        if(!primaryKey.isBlank()){
+            primaryKeyColumn = createPrimaryKey(primaryKey, records);
+        }else{
+            primaryKeyColumn = containsId(columnNames, records);
+        }
+
+        columns.add(primaryKeyColumn);
+
         for (String columnName : columnNames) {
             if(!columns.get(0).getColumnName().equals(columnName)){
                 //TODO: create a data type identifier
                 // VARCHAR is the default data type
-                Column column = new Column(columnName, "VARCHAR(255)", false, false);
+                ColumnsCreateds column = new ColumnsCreateds(columnName, "VARCHAR(255)", false, false);
 
                 columns.add(column);
             }
@@ -38,24 +47,30 @@ public class UploadService {
         return columns;
     }
 
-    public Column containsId(List<String> columnNames, List<CSVRecord> records){
-        Column column = new Column();
+    private static ColumnsCreateds createPrimaryKey(String primaryKey, List<CSVRecord> records){
+        ColumnsCreateds column = new ColumnsCreateds();
+
+        column.setColumnName(primaryKey);
+
+        //identifies whether the data type is String or Long
+        try {
+            Integer.parseInt(records.get(0).get(0));
+            column.setDataType("INT");
+        } catch (Exception e) {
+            column.setDataType("VARCHAR(255)");
+        }
+
+        column.setPrimaryKey(true);
+        column.setAutoIncrement(false);
+
+        return column;
+    }
+
+    private static ColumnsCreateds containsId(List<String> columnNames, List<CSVRecord> records){
+        ColumnsCreateds column = new ColumnsCreateds();
 
         if(columnNames.contains("id")){
-            column.setColumnName("id");
-
-            //identifies whether the data type is String or Long
-            try {
-                Integer.parseInt(records.get(0).get(0));
-                column.setDataType("INT");
-            } catch (Exception e) {
-                column.setDataType("VARCHAR(255)");
-            }
-
-            column.setPrimaryKey(true);
-            column.setAutoIncrement(false);
-
-            return column;
+            return createPrimaryKey("id", records);
         }else{
             //Create a default id column
 
