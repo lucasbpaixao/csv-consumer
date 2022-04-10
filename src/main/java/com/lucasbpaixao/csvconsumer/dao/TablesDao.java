@@ -1,14 +1,11 @@
 package com.lucasbpaixao.csvconsumer.dao;
 
 import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Consumer;
 
-import com.lucasbpaixao.csvconsumer.models.Column;
+import com.lucasbpaixao.csvconsumer.models.ColumnsCreateds;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +22,7 @@ public class TablesDao {
         this.connection = daoFactory.connection();
     }
 
-    public boolean createTable(String tableName, List<Column> columns) throws SQLException{
+    public boolean createTable(String tableName, List<ColumnsCreateds> columns) throws SQLException{
 
         String columnsSql = createColumnsSql(columns, connection.getClass().toString());
 
@@ -33,16 +30,14 @@ public class TablesDao {
 
         PreparedStatement preparedStatement = this.connection.prepareStatement("CREATE TABLE " + tableName + " (" + columnsSql);
 
-        System.out.println(connection.getClass().toString());
-
         return preparedStatement.execute();
     }
 
-    private static String createColumnsSql(List<Column> columns, String connectionClass) throws SQLException{
+    private static String createColumnsSql(List<ColumnsCreateds> columns, String connectionClass) throws SQLException{
         String columnString = "";
         int i = 1;
 
-        for (Column column : columns) {
+        for (ColumnsCreateds column : columns) {
             columnString += column.getColumnName() + " " + column.getDataType();
             
             if(column.getAutoIncrement() && connectionClass.equals("class org.postgresql.jdbc.PgConnection")){

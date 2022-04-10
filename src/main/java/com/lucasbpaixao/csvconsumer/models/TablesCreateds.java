@@ -2,6 +2,7 @@ package com.lucasbpaixao.csvconsumer.models;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,18 +21,28 @@ public class TablesCreateds {
 
     private String primaryKey;
 
-    @OneToMany
-    private List<Column> columns;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    private List<ColumnsCreateds> columns;
+
+    public TablesCreateds(){
+    
+    }
+
+    public TablesCreateds(String tableName, String primaryKey, List<ColumnsCreateds> columnsCreateds){
+        this.tableName = tableName;
+        this.primaryKey = primaryKey;
+        this.columns = columnsCreateds;
+    }
 
     public String getTableName() {
         return tableName;
     }
 
-    public List<Column> getColumns() {
+    public List<ColumnsCreateds> getColumns() {
         return columns;
     }
 
-    public void setColumns(List<Column> columns) {
+    public void setColumns(List<ColumnsCreateds> columns) {
         this.columns = columns;
     }
 

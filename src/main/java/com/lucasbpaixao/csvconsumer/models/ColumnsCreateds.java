@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Column {
+public class ColumnsCreateds {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,9 @@ public class Column {
 
     private boolean autoIncrement;
 
-    public Column(){}
+    public ColumnsCreateds(){}
 
-    public Column(String columnName, String dataType, boolean primaryKey, boolean autoIncrement){
+    public ColumnsCreateds(String columnName, String dataType, boolean primaryKey, boolean autoIncrement){
         this.columnName = columnName;
         this.dataType = dataType;
         this.primaryKey = primaryKey;

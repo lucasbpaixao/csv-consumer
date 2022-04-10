@@ -6,13 +6,17 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.lucasbpaixao.csvconsumer.dao.TablesDao;
-import com.lucasbpaixao.csvconsumer.models.Column;
+import com.lucasbpaixao.csvconsumer.models.ColumnsCreateds;
+import com.lucasbpaixao.csvconsumer.models.TablesCreateds;
+import com.lucasbpaixao.csvconsumer.repository.TableRepository;
 import com.lucasbpaixao.csvconsumer.services.UploadService;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/upload")
+@RequestMapping("/")
 public class UploadRestController {
 
     @Autowired
@@ -29,20 +33,34 @@ public class UploadRestController {
     @Autowired
     private TablesDao tablesDao;
 
-    @PostMapping
-    public ResponseEntity<List<Column>> upload(@RequestParam(name="csvFile") MultipartFile csvFile, @RequestParam(name="tableName") String tableName, @RequestParam(name="primaryKeyField") String primaryKeyField) throws IOException, SQLException {
+    @Autowired
+    private TableRepository tableRepository;
 
+    @PostMapping("/upload")
+    @Transactional
+    public ResponseEntity<List<ColumnsCreateds>> upload(@RequestParam(name="csvFile") MultipartFile csvFile, @RequestParam(name="tableName") String tableName, @RequestParam(name="primaryKeyField") String primaryKeyField) throws IOException, SQLException {
         CSVParser csvParser = CSVFormat.EXCEL.withHeader().parse(new InputStreamReader(csvFile.getInputStream()));
 
         List<String> header = csvParser.getHeaderNames();
         List<String> newColumnNames = uploadService.standardizeColumnNames(header);
 
-        List<Column> columns = uploadService.creatColumns(newColumnNames, csvParser.getRecords());
+        List<ColumnsCreateds> columns = uploadService.createColumns(newColumnNames, csvParser.getRecords(), primaryKeyField);
 
         tablesDao.startConnection();
         tablesDao.createTable(tableName, columns);
-        // /tablesDao.closeConnection();
+        tablesDao.closeConnection();
+
+        TablesCreateds tablesCreateds = new TablesCreateds(tableName, columns.get(0).getColumnName(), columns);
+
+        tableRepository.saveAndFlush(tablesCreateds);
 
         return ResponseEntity.ok().body(columns);        
+    }
+
+    @GetMapping("/tables")
+    public ResponseEntity<List<TablesCreateds>> getTables(){
+
+        List<TablesCreateds> tablesCreateds = tableRepository.findAll();
+        return ResponseEntity.ok().body(tablesCreateds);
     }
 }
