@@ -20,13 +20,16 @@ public class ColumnsCreateds {
 
     private boolean autoIncrement;
 
+    private boolean autoCreated;
+
     public ColumnsCreateds(){}
 
-    public ColumnsCreateds(String columnName, String dataType, boolean primaryKey, boolean autoIncrement){
+    public ColumnsCreateds(String columnName, String dataType, boolean primaryKey, boolean autoIncrement, boolean autoCreated){
         this.columnName = columnName;
         this.dataType = dataType;
         this.primaryKey = primaryKey;
         this.autoIncrement = autoIncrement;
+        this.autoCreated = autoCreated;
     }
 
     public void setAutoIncrement(boolean autoIncrement) {
@@ -67,6 +70,14 @@ public class ColumnsCreateds {
 
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    public void setAutoCreated(boolean autoCreated) {
+        this.autoCreated = autoCreated;
+    }
+
+    public boolean getAutoCreated() {
+        return this.autoCreated;
     }
 
 }

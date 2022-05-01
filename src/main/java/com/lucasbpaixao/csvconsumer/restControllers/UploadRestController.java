@@ -13,6 +13,7 @@ import com.lucasbpaixao.csvconsumer.services.UploadService;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,16 +42,19 @@ public class UploadRestController {
     public ResponseEntity<List<ColumnsCreateds>> upload(@RequestParam(name="csvFile") MultipartFile csvFile, @RequestParam(name="tableName") String tableName, @RequestParam(name="primaryKeyField") String primaryKeyField) throws IOException, SQLException {
         CSVParser csvParser = CSVFormat.EXCEL.withHeader().parse(new InputStreamReader(csvFile.getInputStream()));
 
+        List<CSVRecord> csvRecords = csvParser.getRecords();
+
         List<String> header = csvParser.getHeaderNames();
         List<String> newColumnNames = uploadService.standardizeColumnNames(header);
 
         List<ColumnsCreateds> columns = uploadService.createColumns(newColumnNames, csvParser.getRecords(), primaryKeyField);
 
+        TablesCreateds tablesCreateds = new TablesCreateds(tableName, columns.get(0).getColumnName(), columns);
+
         tablesDao.startConnection();
         tablesDao.createTable(tableName, columns);
+        tablesDao.saveData(tablesCreateds, csvRecords);
         tablesDao.closeConnection();
-
-        TablesCreateds tablesCreateds = new TablesCreateds(tableName, columns.get(0).getColumnName(), columns);
 
         tableRepository.saveAndFlush(tablesCreateds);
 
