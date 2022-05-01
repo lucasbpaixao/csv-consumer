@@ -14,10 +14,17 @@ public class UploadService {
     public List<String> standardizeColumnNames(List<String> columnNames){
         List<String> newColumnNames = new ArrayList<>();
         for (String columnName : columnNames) {
+
+            if(columnName.contains(" ")){
+                columnName = columnName.replaceAll(" ", "_");
+            }else{
+                columnName = columnName.replaceAll("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])", "_");
+            }
+            
             columnName = columnName.toLowerCase();
-            columnName = columnName.replaceAll(" ", "_");
             newColumnNames.add(columnName);
         }
+
         return newColumnNames;
     }
 
@@ -38,7 +45,7 @@ public class UploadService {
             if(!columns.get(0).getColumnName().equals(columnName)){
                 //TODO: create a data type identifier
                 // VARCHAR is the default data type
-                ColumnsCreateds column = new ColumnsCreateds(columnName, "VARCHAR(255)", false, false);
+                ColumnsCreateds column = new ColumnsCreateds(columnName, "VARCHAR(255)", false, false, false);
 
                 columns.add(column);
             }
@@ -62,6 +69,7 @@ public class UploadService {
 
         column.setPrimaryKey(true);
         column.setAutoIncrement(false);
+        column.setAutoCreated(false);
 
         return column;
     }
@@ -78,6 +86,7 @@ public class UploadService {
             column.setDataType("");
             column.setPrimaryKey(true);
             column.setAutoIncrement(true);
+            column.setAutoCreated(true);
             
             return column;
         }
