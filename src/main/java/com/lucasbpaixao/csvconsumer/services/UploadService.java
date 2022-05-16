@@ -92,4 +92,9 @@ public class UploadService {
         }
     }
 
+
+    private String identifyColumnDataType(List<CSVRecord> records, int columnIndex){
+        return null;
+    }
+
 }

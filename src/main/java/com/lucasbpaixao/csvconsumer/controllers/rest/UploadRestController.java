@@ -1,4 +1,4 @@
-package com.lucasbpaixao.csvconsumer.restControllers;
+package com.lucasbpaixao.csvconsumer.controllers.rest;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
