@@ -1,1 +1,48 @@
-<h1>Hello World</h1>
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title> CSV Consumer </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+        rel="stylesheet" 
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
+        crossorigin="anonymous">
+    
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
+        crossorigin="anonymous"></script>
+    </head>
+
+    <body class="h-100 text-white bg-dark container-sm">
+        <h1 class="mb-5 mt-5 text-center">CSV Consumer</h1>
+        <br>
+        <h6>Informe o <b>nome da tabela</b>:</h6>
+        <div class="input-group mt-2">
+            <input class="form-control mt-2" type="text" id="tableName" placeholder="Nome da Tabela" aria-label="Nome da Tabela">
+        </div>
+        <br>
+        <h6>Informe a <b>Chave Primária</b> da tabela (Caso não informado será gerado uma automaticamente):</h6>
+        <div class="input-group mt-2">
+            <input class="form-control mt-2" type="text" id="pk" placeholder="Chave Primária" aria-label="Chave Primária">
+        </div>
+        <br>
+        <h6>Selecione o arquivo CSV:</h6>
+        <div class="">
+            <input class="form-control" type="file" id="inputFile">
+            <div class="mt-5" id="loading"></div>
+        </div>
+
+        <button type="button" class="btn btn-primary mt-3" id="upload">Fazer Upload</button>
+
+        <script src="js/index.js">
+        </script>
+    </body>
+</html>
